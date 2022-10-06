@@ -2,12 +2,12 @@ import os
 from dotenv import load_dotenv
 from web3 import Web3
 from web3.middleware import geth_poa_middleware
+load_dotenv()
 
-eth_provider_url = "http://94.237.54.114:8550/"
+eth_provider_url = f"https://eth-goerli.alchemyapi.io/v2/{os.getenv('alchemy_api_key')}"
+
 provider = Web3.HTTPProvider(eth_provider_url)
 web3 = Web3(provider)
-web3.middleware_onion.inject(geth_poa_middleware, layer=0)
-load_dotenv()
 
 l1_sender_address = os.getenv("ETHEREUM_SYNC_CONTRACT_ADDR")
 abi = [
@@ -75,7 +75,7 @@ abi = [
     }
   ]
 
-start_block_child = 6876070
+start_block_child = 7712260
 contract_instance = web3.eth.contract(address=l1_sender_address, abi=abi)
 nonce = web3.eth.getTransactionCount(os.getenv("ETHEREUM_PUBKEY"), 'latest')
 public_key = os.getenv("ETHEREUM_PUBKEY")
@@ -87,5 +87,5 @@ transaction = contract_instance.functions.sendExactParentHashToL2(start_block_ch
     }) 
 private_key = os.getenv("ETHEREUM_PRIVKEY") 
 signed_txn = web3.eth.account.signTransaction(transaction, private_key=private_key)
-web3.eth.sendRawTransaction(signed_txn.rawTransaction)
-
+txHash = web3.eth.sendRawTransaction(signed_txn.rawTransaction)
+print(f' transaction hash{txHash.hex()}')
