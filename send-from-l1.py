@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from web3 import Web3
 from web3.middleware import geth_poa_middleware
+from rlp import encode, decode
 load_dotenv()
 
 eth_provider_url = f"https://eth-goerli.alchemyapi.io/v2/{os.getenv('alchemy_api_key')}"
@@ -75,7 +76,7 @@ abi = [
     }
   ]
 
-start_block_child = 7712260
+start_block_child = int(os.getenv('START_BLOCK'))
 contract_instance = web3.eth.contract(address=l1_sender_address, abi=abi)
 nonce = web3.eth.getTransactionCount(os.getenv("ETHEREUM_PUBKEY"), 'latest')
 public_key = os.getenv("ETHEREUM_PUBKEY")

@@ -13,4 +13,4 @@ provider = Web3.HTTPProvider(eth_provider_url)
 web3 = Web3(provider)
 # web3.middleware_onion.inject(geth_poa_middleware, layer=0)
 
-print(web3.eth.get_block(7706335))
+print(web3.eth.get_block(7712259))
